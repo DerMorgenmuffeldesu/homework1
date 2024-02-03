@@ -1,46 +1,88 @@
+class Student:
+  def __init__(self, name, surname, gender):
+    self.name = name
+    self.surname = surname
+    self.gender = gender
+    self.finished_courses = []
+    self.courses_in_progress = []
+    self.grades = {}
+
+  def rate_lecturer(self, lecturer, course, grade):
+    if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
+      if course in lecturer.grades:
+        lecturer.grades[course] += [grade]
+      else:
+        lecturer.grades[course] = [grade]
+    else:
+      return 'Ошибка'
+    # print(lecturer.grades)
+  
+  # def av_rate_lec():
+  #   for key, value in lecturer.grades:
+  #     print(value)
+  #   return "ddf"
+  
+  # def __str__(self):
+  #   Student.av_rate_lec()
+  #   return (f"Имя: {self.name}\nФамилия: {self.surname}")
+
 class Mentor:
-    def __init__(self, name, surname):
-        self.name = name
-        self.surname = surname
-        self.courses_attached = []
+  def __init__(self, name, surname):
+    self.name = name
+    self.surname = surname
+    self.courses_attached = []
+  
+  def __str__(self):
+    return (f"Имя: {self.name}\nФамилия: {self.surname}")   
 
 class Lecturer(Mentor):
-        grades = {}
+  grades = {}
+      
+class Reviewer(Mentor):
+  def rate_homework(self, student, course, grade):
+    if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+      if course in student.grades:
+        student.grades[course] += [grade]
+      else:
+        student.grades[course] = [grade]
+    else:
+      return 'Ошибка'
 
 
-class Student:
-    def __init__(self, name, surname, gender):
-        self.name = name
-        self.surname = surname
-        self.gender = gender
-        self.finished_courses = []
-        self.courses_in_progress = []
-        self.grades = {}
- 
-    
-    def add_courses(self, course_name):
-        self.finished_courses.append(course_name)   
 
-    
-    def rate_Lecturer(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and course in self.courses_in_progress and course in lecturer.courses_attached:
-            if course in lecturer.grades: 
-                lecturer.grades[course] += [grade]
-            else:
-                lecturer.grades[course] = [grade]
-        else:
-            return 'Ошибка'
-        
-best_student = Student('Ruoy', 'Eman', 'MAN')
-best_student.courses_in_progress += ['Python']
+student_1 = Student('Сергей', 'Иванов', 'M')
+student_1.courses_in_progress += ['Python']
+student_1.courses_in_progress += ['PHP']
+student_1.courses_in_progress += ['C++']
 
-cool_lec = Lecturer('Some', 'Buddy')
-cool_lec.courses_attached += ['Python']
+reviewer_1 = Reviewer('Петр', 'Яковлев')
+reviewer_1.courses_attached += ['Python']
+reviewer_1.courses_attached += ['C++']
+reviewer_1.courses_attached += ['PHP']
+print(f'Проверяющий: {reviewer_1.name} {reviewer_1.surname}\nВедёт курсы: {" ".join(reviewer_1.courses_attached)}\n')
 
-best_student.rate_Lecturer(cool_lec, 'Python', 10)
-best_student.rate_Lecturer(cool_lec, 'Python', 10)
+reviewer_1.rate_homework(student_1, 'Python', 10)
+reviewer_1.rate_homework(student_1, 'C++', 4)
+reviewer_1.rate_homework(student_1, 'PHP', 6)
+print(f'Оценки студента: {student_1.name} {student_1.surname}\n{student_1.grades}')
+print("-----------------\n")
 
-print(cool_lec.grades)   
+lecturer_1 = Lecturer('Никита', 'Сидоров')
+lecturer_1.courses_attached += ['Python']
+lecturer_1.courses_attached += ['PHP']
+lecturer_1.courses_attached += ['C++']
+
+student_1.rate_lecturer(lecturer_1, 'Python', 9)
+student_1.rate_lecturer(lecturer_1, 'PHP', 5)
+student_1.rate_lecturer(lecturer_1, 'C++', 3)
+print(f'Оценки лектору: {lecturer_1.name} {lecturer_1.surname}\n{lecturer_1.grades}')
+print("-----------------\n")
+
+print(student_1)
+
+print(reviewer_1)
+
+print(lecturer_1)
 
 
 
